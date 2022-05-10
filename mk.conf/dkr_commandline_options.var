@@ -1,0 +1,7 @@
+# Port to run the container 
+# Until here you can define all the individual configurations for your app
+#PORT=4000 
+# Mount directories for localhost:  
+DKR_CMD_LINE_OPTIONS_AWS=-v${PWD}/:/home/ubuntu/code/ -v/tmp/ephermal:/tmp/ephermal -v/mnt/data:/mnt/data  -v${HOME}/.aws:/home/ubuntu/.aws
+DKR_CMD_LINE_OPTIONS_LOC=-v${PWD}/:/home/ubuntu/code/  -v${HOME}/.aws:/home/ubuntu/.aws -hdocker.for.mac.host.internal 
+DKR_CMD_LINE_OPTIONS_MAC=-v${PWD}/:/home/ubuntu/code/  -v${HOME}/.aws:/home/ubuntu/.aws
