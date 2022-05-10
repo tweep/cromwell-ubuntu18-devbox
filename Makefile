@@ -54,7 +54,8 @@ run: ## Run container default version
 test: build  ## Run container with live-mounting of perl code + envrionment variables in dkr_env_vars.env and mount stuff in mk.conf/dkr_commandline_options.var
 	docker run --network=host -i -t --rm --name="$(APP_NAME)" --env-file=./mk.conf/dkr_environment_local.env $(DKR_CMD_LINE_OPTIONS_LOC)  $(APP_NAME):$(VERSION) /bin/bash
 
-
+helloWorld: ## Run HelloWorld wdl with Cromwell 
+	java -jar /home/ubuntu/code/bin/cromwell-78.jar run /home/ubuntu/code/wdl/helloWorld.wdl
 
 #release: build tag-version publish-version ## Build a version, tag and release it. Requires docker/ecr login
 

@@ -20,17 +20,23 @@ RUN apt-get install -y --no-install-recommends git software-properties-common ma
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install java
-RUN mkdir -p /opt \
-    && curl -kSL https://download.java.net/java/GA/jdk18/43f95e8614114aeaa8e8a5fcf20a682d/36/GPL/openjdk-18_linux-x64_bin.tar.gz \
-    | tar -xzC /opt
-ENV JAVA_HOME=/opt/jdk-18
-ENV PATH=$JAVA_HOME/bin:$PATH
+#RUN mkdir -p /opt \
+#    && curl -kSL https://download.java.net/java/GA/jdk18/43f95e8614114aeaa8e8a5fcf20a682d/36/GPL/openjdk-18_linux-x64_bin.tar.gz \
+#    | tar -xzC /opt
+#ENV JAVA_HOME=/opt/jdk-18
+#ENV PATH=$JAVA_HOME/bin:$PATH
+
+#ARG CW_VERSION=78
+#RUN wget https://github.com/broadinstitute/cromwell/releases/download/78/womtool-${CW_VERSION}.jar
+#RUN wget https://github.com/broadinstitute/cromwell/releases/download/78/cromwell-${CW_VERSION}.jar 
 
 
-# Dependencies
-#FROM ubuntu:18.04 AS os_installer
-#ADD scripts/setup_os_ubuntu_18.04.sh /tmp/
-#RUN /tmp/setup_os_ubuntu_18.04.sh
+#ADD /bin/openjdk-18_linux-x64_bin.tar.gz /opt/jdk-18
+COPY /bin/cromwell-78.jar /home/Users/ubuntu/code
+COPY /bin/womtool-78.jar /home/Users/ubuntu/code
+
+ADD scripts/setup_os_ubuntu_18.04.sh /tmp/
+RUN /tmp/setup_os_ubuntu_18.04.sh
 
 
 ##
@@ -39,9 +45,9 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 
 
 RUN apt-get update -y \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends  \
       vim \
-      awscli \
+      awscli  \
       cpanminus \
       build-essential \
       libcurl4-openssl-dev \
@@ -52,18 +58,23 @@ RUN apt-get update -y \
 
 # libcurl4-openssl-dev required for WWW::Curl::Easy / Bio::GNE::Hive::Utils
 
-RUN curl --insecure -L https://cpanmin.us | perl - App::cpanminus
-RUN cpanm File::Slurp IPC::System::Simple Module::Build Test::Differences
-RUN cpanm -v AWS::CLIWrapper String::Random Switch Archive::Extract AWS::CLIWrapper 
+#RUN curl --insecure -L https://cpanmin.us | perl - App::cpanminus
+#RUN cpanm File::Slurp IPC::System::Simple Module::Build Test::Differences
+#RUN cpanm -v AWS::CLIWrapper String::Random Switch Archive::Extract AWS::CLIWrapper 
 
 # modules for standard pipelines
 RUN cpanm -v File::Temp Test::utf8 Test::TempDir::Tiny Test::File Test::Files
 
-RUN cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+#RUN cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
 
-RUN apt-get install -y cgroup-bin 
+#RUN apt-get install -y cgroup-bin 
 
-#ENV INFLUX_COLLECT_METRICS  --collect=cpu,memory,disk,network 
+
+RUN useradd -ms /bin/bash ubuntu
+USER ubuntu:ubuntu
+WORKDIR /home/ubuntu
+
+
 
 #ENTRYPOINT [ "/repo/ensembl-hive/scripts/dev/simple_init.py" ]
 CMD [ "/bin/bash" ]
