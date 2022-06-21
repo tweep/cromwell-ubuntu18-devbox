@@ -51,8 +51,11 @@ build-nc: ## Build default version of container without caching
 run: ## Run container default version 
 	docker run -i -t --rm --name="$(APP_NAME)" $(APP_NAME):$(VERSION)
 
-test: build  ## Run container with live-mounting of perl code + envrionment variables in dkr_env_vars.env and mount stuff in mk.conf/dkr_commandline_options.var
-	docker run --network=host -i -t --rm --name="$(APP_NAME)" --env-file=./mk.conf/dkr_environment_local.env $(DKR_CMD_LINE_OPTIONS_LOC)  $(APP_NAME):$(VERSION) /bin/bash
+test: build  ## Run container with live-mounting of code + envrionment variables in dkr_env_vars.env and mount stuff in mk.conf/dkr_commandline_options.var
+	docker run --network=host -i -t --privileged --rm --name="$(APP_NAME)" --env-file=./mk.conf/dkr_environment_local.env $(DKR_CMD_LINE_OPTIONS_LOC)  $(APP_NAME):$(VERSION) /bin/bash
+
+test-nc: build-nc  ## Run container with live-mounting of code + envrionment variables in dkr_env_vars.env and mount stuff in mk.conf/dkr_commandline_options.var
+	docker run --network=host -i -t --privileged --rm --name="$(APP_NAME)" --env-file=./mk.conf/dkr_environment_local.env $(DKR_CMD_LINE_OPTIONS_LOC)  $(APP_NAME):$(VERSION) /bin/bash
 
 helloWorld: ## Run HelloWorld wdl with Cromwell 
 	java -jar /home/ubuntu/code/bin/cromwell-78.jar run /home/ubuntu/code/wdl/helloWorld.wdl
