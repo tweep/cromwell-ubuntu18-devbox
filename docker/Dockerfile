@@ -14,8 +14,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 
 
-
-
 #ADD scripts/setup_os_ubuntu_18.04.sh /tmp/
 #RUN /tmp/setup_os_ubuntu_18.04.sh
 
@@ -49,23 +47,23 @@ RUN apt-get update -y \
 # Either copy data to /bin or use the 
 # auto download
 
-ADD /bin/openjdk-18_linux-x64_bin.tar.gz /opt/jdk-18
-COPY /bin/cromwell-78.jar /home/Users/ubuntu/code
-COPY /bin/womtool-78.jar /home/Users/ubuntu/code
+#ADD /bin/openjdk-18_linux-x64_bin.tar.gz /opt/jdk-18
+#COPY /bin/cromwell-78.jar /home/Users/ubuntu/code
+#COPY /bin/womtool-78.jar /home/Users/ubuntu/code
 
 
 ## Install java
-#RUN mkdir -p /opt \
+RUN mkdir -p /opt \
 #    && curl -kSL https://download.java.net/java/GA/jdk18/43f95e8614114aeaa8e8a5fcf20a682d/36/GPL/openjdk-18_linux-x64_bin.tar.gz \
 #    | tar -xzC /opt
-#ENV JAVA_HOME=/opt/jdk-18
-#ENV PATH=$JAVA_HOME/bin:$PATH
+ENV JAVA_HOME=/opt/jdk-18
+ENV PATH=$JAVA_HOME/bin:$PATH
 
 ## Install cromwell
-#WORKDIR /home/Users/ubuntu/code
-#ARG CW_VERSION=78
-#RUN wget https://github.com/broadinstitute/cromwell/releases/download/78/womtool-${CW_VERSION}.jar
-#RUN wget https://github.com/broadinstitute/cromwell/releases/download/78/cromwell-${CW_VERSION}.jar 
+WORKDIR /home/Users/ubuntu/code
+ARG CW_VERSION=78
+RUN wget https://github.com/broadinstitute/cromwell/releases/download/78/womtool-${CW_VERSION}.jar
+RUN wget https://github.com/broadinstitute/cromwell/releases/download/78/cromwell-${CW_VERSION}.jar 
 
 # Install miniwdl
 #RUN apt-get install -y python3-pip  
